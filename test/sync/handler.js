@@ -7,12 +7,12 @@ exports.handler = function(event, context, callback) {
     statusDescription: 'OK',
     headers: {
       'cache-control': [{
-          key: 'Cache-Control',
-          value: 'max-age=0'
+        key: 'Cache-Control',
+        value: 'max-age=0'
       }],
       'content-type': [{
-          key: 'Content-Type',
-          value: 'text/html'
+        key: 'Content-Type',
+        value: 'text/html'
       }]
     },
     body: 'Success',

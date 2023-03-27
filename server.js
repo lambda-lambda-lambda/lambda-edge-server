@@ -39,7 +39,14 @@ program
     }
   });
 
-program.parse();
+// Skip Commander options during testing.
+if (process.env.NODE_ENV === 'test') {
+  const {handler} = require(process.env.TEST_HANDLER);
+
+  module.exports = initServer(handler, 3000);
+} else {
+  program.parse();
+}
 
 /**
  * Init Lambda@Edge emulator environment.
@@ -50,10 +57,12 @@ program.parse();
  * @param {Function} port
  *   HTTP server port number.
  *
+ * @return {Object}
+ *
  * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
  */
 function initServer(handler, port) {
-  http.createServer(function(req, res) {
+  return http.createServer(function(req, res) {
     let body;
 
     req.on('data', function(data) {
