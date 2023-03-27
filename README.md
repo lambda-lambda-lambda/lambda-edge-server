@@ -10,6 +10,10 @@
 
 ### CLI options
 
+Launch HTTP server instance:
+
+    $ npm start ./path/to/script.js
+
 Run [ESLint](https://eslint.org/) on project sources:
 
     $ npm run lint

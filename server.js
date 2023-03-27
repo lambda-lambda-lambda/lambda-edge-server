@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  *  lambda-edge-server
  *  AWS Lambda@Edge handler emulator (HTTP server).
@@ -7,79 +9,119 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 
-const http = require('http');
-const url  = require('url');
+'use strict';
 
-// Local modules.
-const {handler} = require('../{{appName}}/src/app');
+const {Command} = require('commander');
+const fs        = require('fs');
+const http      = require('http');
+const url       = require('url');
 
-/**
- * Init Lambda@Edge script environment.
- */
-http.createServer(function(req, res) {
-  let body;
+// Process CLI options.
+const program = new Command();
 
-  req.on('data', function(data) {
-    body += data;
+program
+  .usage('[options]')
+  .option('--handler <path>', 'Lambda@Edge handler script.')
+  .option('--port <number>', 'HTTP server port number.', 3000)
+  .action(function(name) {
+    const script = name.handler;
+
+    if (fs.existsSync(script)) {
+      const {handler} = require(script);
+
+      if (isValidFunc(handler)) {
+        initServer(handler, name.port);
+      } else {
+        throw new Error('Invalid handler method');
+      }
+    } else {
+      this.outputHelp();
+    }
   });
 
-  req.on('end', function() {
-    if (body) {
-      body = encodeBody(body);
-    }
+program.parse();
 
-    // Simulate AWS origin-request event.
-    const event = {
-      Records: [
-        {
-          cf: {
-            request: {
-              clientIp: res.socket.remoteAddress,
-              headers: formatHeaders(req.headers).toEdge(),
-              method: req.method,
-              querystring: url.parse(req.url).query,
-              uri: url.parse(req.url).pathname,
-              body: {
-                data: body
+/**
+ * Init Lambda@Edge emulator environment.
+ *
+ * @param {Function} handler
+ *   Lambda function method.
+ *
+ * @param {Function} port
+ *   HTTP server port number.
+ *
+ * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
+ */
+function initServer(handler, port) {
+  http.createServer(function(req, res) {
+    let body;
+
+    req.on('data', function(data) {
+      body += data;
+    });
+
+    req.on('end', function() {
+      if (body) {
+        body = encodeBody(body);
+      }
+
+      // Simulate AWS origin-request event.
+      const event = {
+        Records: [
+          {
+            cf: {
+              request: {
+                clientIp: res.socket.remoteAddress,
+                headers: formatHeaders(req.headers).toEdge(),
+                method: req.method,
+                querystring: url.parse(req.url).query,
+                uri: url.parse(req.url).pathname,
+                body: {
+                  data: body
+                }
               }
             }
           }
+        ]
+      };
+
+      // .. and callback() application handler.
+      const callback = function(request, response) {
+        let {body, bodyEncoding, headers, status} = response;
+
+        if (headers) {
+          headers = formatHeaders(response.headers).toNode();
+          headers.map(header => res.setHeader(header.key, header.value));
         }
-      ]
-    };
 
-    // .. and callback() application handler.
-    const callback = function(request, response) {
-      const headers = formatHeaders(response.headers).toNode();
-      headers.map(header => res.setHeader(header.key, header.value));
+        // Override Edge required media encoding.
+        if (bodyEncoding === 'base64') {
+          body = Buffer.from(body, 'base64');
+        }
 
-      let {body, bodyEncoding, status} = response;
+        res.statusCode = status;
 
-      // Override Edge required media encoding.
-      if (bodyEncoding === 'base64') {
-        body = Buffer.from(body, 'base64');
+        res.end(body);
+      };
+
+      // Run lambda-lambda-lambda
+      if (isAsyncFunc(handler) || isPromise(handler)) {
+
+        // Asynchronous handling.
+        handler(event)
+          .then(function(response) {
+            callback(null, response);
+          });
+      } else {
+
+        // Synchronous handling.
+        handler(event, null, callback);
       }
-
-      res.statusCode = status;
-
-      res.end(body);
-    };
-
-    // Run lambda-lambda-lambda
-    if (isAsyncFunc(handler) || isPromise(handler)) {
-
-      // Asynchronous handling.
-      handler(event)
-        .then(function(response) {
-          callback(null, response);
-        });
-    } else {
-
-      // Synchronous handling.
-      handler(event, null, callback);
-    }
+    });
+  }).listen(port, () => {
+    console.log(`HTTP server started. Listening on port ${port}`);
   });
-}).listen(3000);
+}
 
 /**
  * Return base64 encoded body as string.
@@ -149,4 +191,16 @@ function isAsyncFunc(value) {
  */
 function isPromise(obj) {
   return (obj && (obj[Symbol.toStringTag] === 'Promise' || typeof obj.then === 'function'));
+}
+
+/**
+ * Check if valid handler function.
+ *
+ * @param {Function} value
+ *   Handler function.
+ *
+ * @return {Boolean}
+ */
+function isValidFunc(value) {
+  return (typeof value === 'function' && value.length >= 1 && value.length <= 3);
 }
