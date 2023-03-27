@@ -2,7 +2,7 @@
 
 /**
  *  lambda-edge-server
- *  AWS Lambda@Edge handler emulator (HTTP server).
+ *  AWS CloudFront Lambda@Edge handler function emulator.
  *
  *  Copyright 2023, Marc S. Brooks (https://mbrooks.info)
  *  Licensed under the MIT license:

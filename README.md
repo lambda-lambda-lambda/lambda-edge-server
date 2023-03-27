@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server)
 
-[AWS Lambda@Edge](https://aws.amazon.com/lambda/edge) handler emulator (HTTP server).
+AWS [CloudFront Lambda@Edge](https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html) function handler emulator.
 
 Provides a translation layer between [Node.js](https://nodejs.org) server and [Lambda](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html) response format.  The goal is simplify local testing without the need for complex dependencies.
 

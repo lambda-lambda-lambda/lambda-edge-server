@@ -1,6 +1,6 @@
 {
   "name": "lambda-edge-server",
-  "description": "AWS Lambda@Edge handler emulator (HTTP server).",
+  "description": "AWS CloudFront Lambda@Edge handler function emulator.",
   "version": "0.0.1",
   "main": "server.js",
   "scripts": {
