@@ -1,5 +1,7 @@
 # lambda-edge-server
 
+[![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server)
+
 [AWS Lambda@Edge](https://aws.amazon.com/lambda/edge) handler emulator (HTTP server).
 
 ## Dependencies
