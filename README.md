@@ -4,9 +4,69 @@
 
 [AWS Lambda@Edge](https://aws.amazon.com/lambda/edge) handler emulator (HTTP server).
 
+Provides a translation layer between [Node.js](https://nodejs.org) server and [Lambda](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html) response format.  The goal is simplify local testing without the need for complex dependencies.
+
 ## Dependencies
 
 - [Node.js](https://nodejs.org)
+
+## Lambda function handlers
+
+The following `origin-request/origin-response` format is currently supported.
+
+### Synchronous example
+
+```javascript
+/**
+ * @see AWS::Serverless::Function
+ */
+exports.handler = function(event, context, callback) {
+  const response = {
+    status: '200',
+    statusDescription: 'OK',
+    headers: {
+      'cache-control': [{
+        key: 'Cache-Control',
+        value: 'max-age=0'
+      }],
+      'content-type': [{
+        key: 'Content-Type',
+        value: 'text/html'
+      }]
+    },
+    body: 'Success',
+  };
+
+  callback(null, response);
+};
+```
+
+### Asynchronous example
+
+```javascript
+/**
+ * @see AWS::Serverless::Function
+ */
+exports.handler = async function(event) {
+  const response = {
+    status: '200',
+    statusDescription: 'OK',
+    headers: {
+      'cache-control': [{
+        key: 'Cache-Control',
+        value: 'max-age=0'
+      }],
+      'content-type': [{
+        key: 'Content-Type',
+        value: 'text/html'
+      }]
+    },
+    body: 'Success',
+  };
+
+  return response;
+};
+```
 
 ## Developers
 
@@ -27,6 +87,7 @@ Run [Mocha](https://mochajs.org) integration tests:
 ## References
 
 - [Example origin request](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html#example-origin-request)
+- [Example origin-response](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html#lambda-event-structure-response)
 
 ## Contributions
 
