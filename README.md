@@ -10,6 +10,12 @@ Provides a translation layer between [Node.js](https://nodejs.org) HTTP server a
 
 - [Node.js](https://nodejs.org)
 
+## Installation
+
+Install this package using [NPM](https://npmjs.com):
+
+    $ npm install lambda-edge-server
+
 ## Lambda function handlers
 
 The following `origin-request/origin-response` format is currently supported.
