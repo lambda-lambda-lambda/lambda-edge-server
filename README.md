@@ -1,10 +1,10 @@
 # lambda-edge-server
 
-[![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server)
+[![npm version](https://badge.fury.io/js/lambda-edge-server.svg)](https://badge.fury.io/js/lambda-edge-server) [![](https://img.shields.io/npm/dm/lambda-edge-server.svg)](https://www.npmjs.com/package/lambda-edge-server) [![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server)
 
 AWS [CloudFront Lambda@Edge](https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html) function handler emulator.
 
-Provides a translation layer between [Node.js](https://nodejs.org) server and [Lambda](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html) response format.  The goal is simplify local testing without the need for complex dependencies.
+Provides a translation layer between [Node.js](https://nodejs.org) HTTP server and [Lambda](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html) function response format.  The goal is simplify local testing without the need for complex dependencies.
 
 ## Dependencies
 
@@ -72,7 +72,7 @@ exports.handler = async function(event) {
 
 ### CLI options
 
-Launch HTTP server instance:
+Launch [HTTP server instance](http://localhost:3000), run the function:
 
     $ npm start ./path/to/script.js
 
