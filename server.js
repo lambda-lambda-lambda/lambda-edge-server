@@ -24,7 +24,7 @@ program
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', 3000)
   .action(function(name) {
-    const script = name.handler;
+    const script = process.cwd() + '/' + name.handler;
 
     if (fs.existsSync(script)) {
       const {handler} = require(script);
