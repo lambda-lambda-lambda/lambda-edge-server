@@ -108,23 +108,30 @@ function initServer(handler, port) {
           body = Buffer.from(body, 'base64');
         }
 
-        res.statusCode = status;
+        if (status) {
+          res.statusCode = status;
+        }
 
         res.end(body);
       };
 
-      // Run lambda-lambda-lambda
-      if (isAsyncFunc(handler) || isPromise(handler)) {
+      try {
 
-        // Asynchronous handling.
-        handler(event)
-          .then(function(response) {
-            callback(null, response);
-          });
-      } else {
+        // Run lambda-lambda-lambda
+        if (isAsyncFunc(handler) || isPromise(handler)) {
 
-        // Synchronous handling.
-        handler(event, null, callback);
+          // Asynchronous handling.
+          handler(event)
+            .then(function(response) {
+              callback(null, response);
+            });
+        } else {
+
+          // Synchronous handling.
+          handler(event, null, callback);
+        }
+      } catch (err) {
+        this.emit('error', Error('Malformed handler method. Exiting..'));
       }
     });
   }).listen(port, () => {
