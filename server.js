@@ -23,14 +23,14 @@ program
   .usage('[options]')
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', 3000)
-  .action(function(name) {
-    const script = process.cwd() + '/' + name.handler;
+  .action(function(opts) {
+    const script = process.cwd() + '/' + opts.handler;
 
     if (fs.existsSync(script)) {
       const {handler} = require(script);
 
       if (isValidFunc(handler)) {
-        initServer(handler, name.port);
+        initServer(handler, opts.port);
       } else {
         throw new Error('Invalid handler method');
       }
