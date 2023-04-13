@@ -36,7 +36,7 @@ program
         errors.push("  option '--handler <path>' allows path Lambda@Edge handler script");
       }
 
-      if (opts.port && !/^[0-9]{2,5}$/.test(opts.port) || !opts.port) {
+      if (opts.port && !/^[0-9]{2,5}$/.test(opts.port)) {
         errors.push("  option '--port <number>' allows up to 5 numeric characters");
       }
 
