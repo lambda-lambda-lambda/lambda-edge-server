@@ -21,20 +21,44 @@ const program = new Command();
 
 program
   .usage('[options]')
+
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', 3000)
-  .action(function(opts) {
-    const script = process.cwd() + '/' + opts.handler;
 
-    if (fs.existsSync(script)) {
+  .action(function(opts) {
+    const errors = [];
+
+    try {
+      const script = process.cwd() + '/' + opts.handler;
+
+      // Validate option values.
+      if (opts.handler && !fs.existsSync(script) || !opts.handler) {
+        errors.push("  option '--handler <path>' allows path Lambda@Edge handler script");
+      }
+
+      if (opts.port && !/^[0-9]{2,5}$/.test(opts.port) || !opts.port) {
+        errors.push("  option '--port <number>' allows up to 5 numeric characters");
+      }
+
+      if (errors.length) {
+        console.error('error: Invalid script arguments');
+
+        throw new Error(errors.join('\n'));
+      }
+
       const {handler} = require(script);
 
       if (isValidFunc(handler)) {
-        initServer(handler, opts.port);
-      } else {
-        throw new Error('Invalid handler method');
+        return initServer(handler, opts.port);
       }
-    } else {
+
+      throw new Error('error: Invalid handler method');
+
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(`${err.message}\n`);
+      }
+
       this.outputHelp();
     }
   });
