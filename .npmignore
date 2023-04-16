@@ -1,4 +1,4 @@
 .eslintrc
+.travis.yml
 .vscode
-test/*
-README.md
+test
