@@ -4,8 +4,8 @@
   "version": "0.0.5",
   "main": "server.js",
   "scripts": {
-    "lint": "node_modules/.bin/eslint *.js test",
-    "test": "node_modules/.bin/mocha --require test/mocha.env.js 'test/**/*.js'",
+    "lint": "eslint *.js test",
+    "test": "mocha --require test/mocha.env.js 'test/**/*.js'",
     "start": "node server.js --handler"
   },
   "repository": {
