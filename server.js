@@ -16,6 +16,8 @@ const fs        = require('fs');
 const http      = require('http');
 const url       = require('url');
 
+const SERVER_PORT = 3000;
+
 // Process CLI options.
 const program = new Command();
 
@@ -23,7 +25,8 @@ program
   .usage('[options]')
 
   .option('--handler <path>', 'Lambda@Edge handler script.')
-  .option('--port <number>', 'HTTP server port number.', 3000)
+  .option('--port <number>', 'HTTP server port number.', SERVER_PORT)
+  .option('--debug <boolean>', 'Log event to STDOUT.', false)
 
   .action(function(opts) {
     const errors = [];
@@ -67,7 +70,7 @@ program
 if (process.env.NODE_ENV === 'test') {
   const {handler} = require(process.env.TEST_HANDLER);
 
-  module.exports = initServer(handler, 3000);
+  module.exports = initServer(handler, SERVER_PORT);
 } else {
   program.parse();
 }
@@ -87,13 +90,16 @@ if (process.env.NODE_ENV === 'test') {
  */
 function initServer(handler, port) {
   return http.createServer(function(req, res) {
-    let body;
+    let body = '';
 
     req.on('data', function(data) {
       body += data;
     });
 
     req.on('end', function() {
+      const path  = url.parse(req.url).pathname;
+      const query = url.parse(req.url).query;
+
       if (body) {
         body = encodeBody(body);
       }
@@ -107,8 +113,8 @@ function initServer(handler, port) {
                 clientIp: res.socket.remoteAddress,
                 headers: formatHeaders(req.headers).toEdge(),
                 method: req.method,
-                querystring: url.parse(req.url).query,
-                uri: url.parse(req.url).pathname,
+                querystring: query,
+                uri: path,
                 body: {
                   data: body
                 }
@@ -154,6 +160,9 @@ function initServer(handler, port) {
           // Synchronous handling.
           handler(event, null, callback);
         }
+
+        console.log(req.method, path, JSON.stringify(event));
+
       } catch (err) {
         this.emit('error', Error('Malformed handler method. Exiting..'));
       }
