@@ -26,7 +26,7 @@ program
 
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', SERVER_PORT)
-  .option('--debug <boolean>', 'Log event to STDOUT.', false)
+  .option('--debug <boolean>', 'Log event to STDOUT.', true)
 
   .action(function(opts) {
     const errors = [];
