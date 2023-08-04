@@ -161,7 +161,7 @@ function initServer(handler, port) {
           handler(event, null, callback);
         }
 
-        console.log(req.method, path, JSON.stringify(event));
+        console.log(Date.now(), req.method, path, JSON.stringify(event));
 
       } catch (err) {
         this.emit('error', Error('Malformed handler method. Exiting..'));
