@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === 'test') {
  * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
  */
 function initServer(handler, port) {
-  return http.createServer(function(req, res) {
+  const server = http.createServer(function(req, res) {
     let body = '';
 
     req.on('data', function(data) {
@@ -167,9 +167,22 @@ function initServer(handler, port) {
         this.emit('error', Error('Malformed handler method. Exiting..'));
       }
     });
-  }).listen(port, () => {
-    console.log(`HTTP server started. Listening on port ${port}`);
   });
+
+  // Start HTTP server; increment port in use.
+  return server
+    .listen(port, () => {
+      console.log(`HTTP server started. Listening on port ${port}`);
+    })
+    .on('error', function(err) {
+      if (err.code === 'EADDRINUSE') {
+        this.close();
+
+        console.warn(`Port ${port} in use. Trying another port.`);
+
+        initServer(handler, port + 1);
+      }
+    });
 }
 
 /**
