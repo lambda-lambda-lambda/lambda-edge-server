@@ -110,7 +110,7 @@ function initServer(handler, port) {
           {
             cf: {
               request: {
-                clientIp: res.socket.remoteAddress,
+                clientIp: res.socket?.remoteAddress,
                 headers: formatHeaders(req.headers).toEdge(),
                 method: req.method,
                 querystring: query,
