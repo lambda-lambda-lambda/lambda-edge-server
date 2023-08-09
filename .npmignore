@@ -1,4 +1,5 @@
 .eslintrc
 .travis.yml
 .vscode
+ISSUE_TEMPLATE.md
 test
