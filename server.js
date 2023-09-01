@@ -26,7 +26,7 @@ program
 
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', SERVER_PORT)
-  .option('--debug <boolean>', 'Log event to STDOUT.', true)
+  .option('--silent', 'Disable logging events to STDOUT')
 
   .action(function(opts) {
     const errors = [];
@@ -52,7 +52,7 @@ program
       const {handler} = require(script);
 
       if (isValidFunc(handler)) {
-        return initServer(handler, opts.port);
+        return initServer(handler, opts.port, !opts.silent);
       }
 
       throw new Error('error: Invalid handler method');
@@ -84,11 +84,14 @@ if (process.env.NODE_ENV === 'test') {
  * @param {Function} port
  *   HTTP server port number.
  *
+ * @param {Boolean} logEvents
+ *   Log events to STDOUT (default: true).
+ *
  * @return {Object}
  *
  * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
  */
-function initServer(handler, port) {
+function initServer(handler, port, logEvents = true) {
   const server = http.createServer(function(req, res) {
     let body = '';
 
@@ -161,7 +164,7 @@ function initServer(handler, port) {
           handler(event, null, callback);
         }
 
-        console.log(Date.now(), req.method, path, JSON.stringify(event));
+        log(Date.now(), req.method, path, JSON.stringify(event));
 
       } catch (err) {
         this.emit('error', Error('Malformed handler method. Exiting..'));
@@ -169,16 +172,23 @@ function initServer(handler, port) {
     });
   });
 
-  // Start HTTP server; increment port in use.
+  // Log event to STDOUT.
+  const log = function() {
+    if (logEvents) {
+      console.log(...arguments);
+    }
+  };
+
+  // Start HTTP server; increment port if used.
   return server
     .listen(port, () => {
-      console.log(`HTTP server started. Listening on port ${port}`);
+      log(`HTTP server started. Listening on port ${port}`);
     })
     .on('error', function(err) {
       if (err.code === 'EADDRINUSE') {
         this.close();
 
-        console.warn(`Port ${port} in use. Trying another port.`);
+        log(`Port ${port} in use. Trying another port.`);
 
         initServer(handler, port + 1);
       }
