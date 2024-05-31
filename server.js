@@ -26,7 +26,7 @@ program
 
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', SERVER_PORT)
-  .option('--silent', 'Disable logging Router errors to STDOUT', false)
+  .option('--silent', 'Disable logging Router events to STDOUT', false)
 
   .action(function(opts) {
     const errors = [];
@@ -84,14 +84,14 @@ if (process.env.NODE_ENV === 'test') {
  * @param {Function} port
  *   HTTP server port number.
  *
- * @param {Boolean} logRouterError
- *   Log Router errors to STDOUT (default: true).
+ * @param {Boolean} logRouterEvents
+ *   Log Router events to STDOUT (default: true).
  *
  * @return {Object}
  *
  * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
  */
-function initServer(handler, port, logRouterError = true) {
+function initServer(handler, port, logRouterEvents = true) {
   const server = http.createServer(function(req, res) {
     let body = '';
 
@@ -164,10 +164,10 @@ function initServer(handler, port, logRouterError = true) {
           handler(event, null, callback);
         }
 
-        log(Date.now(), req.method, path, JSON.stringify(event));
+        logRouterEvents && console.log(Date.now(), req.method, path, JSON.stringify(event));
 
       } catch (err) {
-        logRouterError && this.emit('error', err);
+        logRouterEvents && this.emit('error', err);
       }
     });
   });
