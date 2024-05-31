@@ -26,7 +26,7 @@ program
 
   .option('--handler <path>', 'Lambda@Edge handler script.')
   .option('--port <number>', 'HTTP server port number.', SERVER_PORT)
-  .option('--silent', 'Disable logging events to STDOUT')
+  .option('--silent', 'Disable logging Router errors to STDOUT', false)
 
   .action(function(opts) {
     const errors = [];
@@ -84,14 +84,14 @@ if (process.env.NODE_ENV === 'test') {
  * @param {Function} port
  *   HTTP server port number.
  *
- * @param {Boolean} logEvents
- *   Log events to STDOUT (default: true).
+ * @param {Boolean} logRouterError
+ *   Log Router errors to STDOUT (default: true).
  *
  * @return {Object}
  *
  * @see https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
  */
-function initServer(handler, port, logEvents = true) {
+function initServer(handler, port, logRouterError = true) {
   const server = http.createServer(function(req, res) {
     let body = '';
 
@@ -167,28 +167,21 @@ function initServer(handler, port, logEvents = true) {
         log(Date.now(), req.method, path, JSON.stringify(event));
 
       } catch (err) {
-        this.emit('error', Error('Malformed handler method. Exiting..'));
+        logRouterError && this.emit('error', err);
       }
     });
   });
 
-  // Log event to STDOUT.
-  const log = function() {
-    if (logEvents) {
-      console.log(...arguments);
-    }
-  };
-
   // Start HTTP server; increment port if used.
   return server
     .listen(port, () => {
-      log(`HTTP server started. Listening on port ${port}`);
+      console.info(`HTTP server started. Listening on port ${port}`);
     })
     .on('error', function(err) {
       if (err.code === 'EADDRINUSE') {
         this.close();
 
-        log(`Port ${port} in use. Trying another port.`);
+        console.error(`Port ${port} in use. Trying another port.`);
 
         initServer(handler, port + 1);
       }
