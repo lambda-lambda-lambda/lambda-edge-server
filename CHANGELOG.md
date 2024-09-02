@@ -22,3 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0) a
 - Refactored `RouterError` exception handling.
 - Added ability to disable logging.
 - Replaced `--debug` with `--silent` switch.
+
+## [0.1.2] - 2024-09-02
+
+- Upgraded outdated NPM packages
+- NPM security fix ([CVE-2024-4068](https://github.com/advisories/GHSA-grv7-fg5c-xmjg))
