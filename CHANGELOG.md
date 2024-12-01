@@ -27,3 +27,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0) a
 
 - Upgraded outdated NPM packages
 - NPM security fix ([CVE-2024-4068](https://github.com/advisories/GHSA-grv7-fg5c-xmjg))
+
+## [0.1.3] - 2024-12-01
+
+- NPM security fix (CVE-2024-21538)
+- Upgraded outdated NPM packages

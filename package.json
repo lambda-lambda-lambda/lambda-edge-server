@@ -1,7 +1,7 @@
 {
   "name": "lambda-edge-server",
   "description": "AWS CloudFront Lambda@Edge handler function emulator.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "server.js",
   "scripts": {
     "lint": "eslint *.js test",
