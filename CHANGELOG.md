@@ -32,3 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0) a
 
 - NPM security fix (CVE-2024-21538)
 - Upgraded outdated NPM packages
+
+## [0.1.4] - 2025-07-29
+
+- NPM security fix (CVE-2024-11831)
