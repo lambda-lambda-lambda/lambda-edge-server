@@ -1,6 +1,6 @@
 # lambda-edge-server
 
-[![npm version](https://badge.fury.io/js/lambda-edge-server.svg)](https://badge.fury.io/js/lambda-edge-server) [![](https://img.shields.io/npm/dm/lambda-edge-server.svg)](https://www.npmjs.com/package/lambda-edge-server) [![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server) [![Install size](https://packagephobia.com/badge?p=@lambda-lambda-lambda/lambda-edge-server)](https://packagephobia.com/result?p=@lambda-lambda-lambda/lambda-edge-server)
+[![npm version](https://badge.fury.io/js/lambda-edge-server.svg)](https://badge.fury.io/js/lambda-edge-server) [![](https://img.shields.io/npm/dm/lambda-edge-server.svg)](https://www.npmjs.com/package/lambda-edge-server) [![Build Status](https://api.travis-ci.com/lambda-lambda-lambda/lambda-edge-server.svg?branch=master)](https://app.travis-ci.com/github/lambda-lambda-lambda/lambda-edge-server) [![Install size](https://packagephobia.com/badge?p=lambda-edge-server)](https://packagephobia.com/result?p=lambda-edge-server) [![](https://img.shields.io/github/v/release/lambda-lambda-lambda/lambda-edge-server)](https://github.com/lambda-lambda-lambda/lambda-edge-server/releases)
 
 AWS [CloudFront Lambda@Edge](https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html) function handler emulator.
 
