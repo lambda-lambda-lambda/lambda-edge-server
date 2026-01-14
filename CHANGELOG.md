@@ -30,9 +30,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0) a
 
 ## [0.1.3] - 2024-12-01
 
-- NPM security fix (CVE-2024-21538)
+- NPM security fix ([CVE-2024-21538](https://github.com/advisories/GHSA-3xgq-45jj-v275))
 - Upgraded outdated NPM packages
 
 ## [0.1.4] - 2025-07-29
 
-- NPM security fix (CVE-2024-11831)
+- NPM security fix ([CVE-2024-11831](https://github.com/advisories/GHSA-76p7-773f-r4q5))
+
+## [0.1.5] - 2026-01-14
+
+- Package node engine to AWS supported (v20)
+- NPM security fix ([CVE-2025-15284](https://github.com/advisories/GHSA-6rw7-vpxm-498p))
