@@ -41,3 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0) a
 
 - Package node engine to AWS supported (v20)
 - NPM security fix ([CVE-2025-15284](https://github.com/advisories/GHSA-6rw7-vpxm-498p))
+
+## [0.1.6] - 2026-02-18
+
+- NPM security fix ([CVE-2026-2391](https://github.com/advisories/GHSA-w7fw-mjwx-w883))
